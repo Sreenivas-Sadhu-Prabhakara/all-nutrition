@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Nutrition (A): Strategic Dashboard</title>
+    <style>
+        /* --- 1. CORE THEME & VARIABLES --- */
+        :root {
+            --primary: #0F172A;      /* Deep Navy */
+            --accent: #38BDF8;       /* Sky Blue */
+            --success: #10B981;      /* Emerald */
+            --warning: #F59E0B;      /* Amber */
+            --danger: #EF4444;       /* Red */
+            --bg-body: #F1F5F9;      /* Slate 100 */
+            --bg-card: #FFFFFF;
+            --text-main: #334155;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* --- 2. RESET & LAYOUT --- */
+        * { box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 3. HEADER AREA --- */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-content h1 { margin: 0; font-size: 1.8rem; letter-spacing: -0.02em; }
+        .header-content p { margin: 5px 0 0; opacity: 0.8; font-size: 0.9rem; }
+        .kpi-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .kpi-val { display: block; font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+        .kpi-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- 4. TAB NAVIGATION --- */
+        .tabs {
+            display: flex;
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto; /* Scroll on mobile */
+        }
+        .tab-btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab-btn:hover { color: var(--primary); background: rgba(0,0,0,0.02); }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+            background: white;
+        }
+
+        /* --- 5. CONTENT PANELS --- */
+        .panel {
+            display: none; /* Hidden by default */
+            padding: 2.5rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .panel.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 6. TYPOGRAPHY & COMPONENTS --- */
+        h2 { color: var(--primary); border-left: 4px solid var(--accent); padding-left: 1rem; margin-top: 0; }
+        h3 { color: var(--text-main); font-size: 1.1rem; margin-top: 2rem; }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .info-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .info-card.risk { border-top: 4px solid var(--danger); }
+        .info-card.insight { border-top: 4px solid var(--success); }
+        
+        /* Lists */
+        ul.checklist { list-style: none; padding: 0; }
+        ul.checklist li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed var(--border);
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        ul.checklist li::before { content: "→"; color: var(--accent); font-weight: bold; }
+
+        /* SVGs */
+        figure { margin: 2rem 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        svg { display: block; width: 100%; height: auto; max-height: 350px; background: white; }
+        figcaption {
+            text-align: center; font-size: 0.8rem; color: var(--text-light);
+            padding: 0.5rem; background: #F8FAFC; border-top: 1px solid var(--border);
+        }
+
+        /* --- 7. RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 1rem; }
+            .tabs { justify-content: flex-start; }
+            .panel { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <header>
+        <div class="header-content">
+            <h1>All Nutrition (A) Strategic Brief</h1>
+            <p>Segmentation Analysis & Omni-Channel Transformation</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <div class="kpi-badge">
+                <span class="kpi-val">35</span>
+                <span class="kpi-lbl">Stores</span>
+            </div>
+            <div class="kpi-badge">
+                <span class="kpi-val" style="color:var(--danger)">Unvalidated</span>
+                <span class="kpi-lbl">Current Strategy</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'overview')">1. Overview</button>
+        <button class="tab-btn" onclick="openTab(event, 'critique')">2. Research Critique</button>
+        <button class="tab-btn" onclick="openTab(event, 'insights')">3. Key Insights</button>
+        <button class="tab-btn" onclick="openTab(event, 'segments')">4. Segmentation</button>
+        <button class="tab-btn" onclick="openTab(event, 'action')">5. Action Plan</button>
+    </nav>
+
+    <div id="overview" class="panel active">
+        <h2>Executive Summary & Context</h2>
+        <div class="card-grid">
+            <div class="info-card">
+                <h3 style="margin-top:0;">The Strategic Pivot</h3>
+                <p><strong>Goal:</strong> Transition All Nutrition from a "product supply" retailer to a "best-in-class customer experience" provider.</p>
+                <p><strong>Driver:</strong> Commoditization in the Chilean supplement market requires differentiation through expertise and advice.</p>
+            </div>
+            <div class="info-card risk">
+                <h3 style="margin-top:0;">The Critical Risk</h3>
+                <p>The operational pivot is currently based on <strong>flawed qualitative data</strong> (3 focus groups). Restructuring the store fleet based on unvalidated segments will lead to misaligned staffing and inventory.</p>
+            </div>
+        </div>
+
+        <h3>The Business Ecosystem</h3>
+        <p>Nutraline (Parent) manufactures/imports; All Nutrition (Retail) sells via stores and online. The goal is to unite these into an Omni-CX loop.</p>
+        
+        <figure>
+            <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+                <rect width="800" height="250" fill="#ffffff"/>
+                
+                <rect x="50" y="80" width="180" height="100" rx="8" fill="#0F172A"/>
+                <text x="140" y="135" text-anchor="middle" fill="white" font-weight="bold" font-family="sans-serif">NUTRALINE</text>
+                <text x="140" y="155" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="sans-serif">Supply & Brands</text>
+                
+                <path d="M230 130 L300 130" stroke="#CBD5E1" stroke-width="4" marker-end="url(#arrow)"/>
+                
+                <rect x="300" y="50" width="220" height="160" rx="8" fill="#F1F5F9" stroke="#38BDF8" stroke-width="2"/>
+                <text x="410" y="80" text-anchor="middle" fill="#0F172A" font-weight="bold" font-family="sans-serif">ALL NUTRITION (Retail)</text>
+                
+                <rect x="320" y="100" width="80" height="60" rx="4" fill="white" stroke="#CBD5E1"/>
+                <text x="360" y="135" text-anchor="middle" fill="#334155" font-size="12" font-family="sans-serif">Stores</text>
+                
+                <rect x="420" y="100" width="80" height="60" rx="4" fill="white" stroke="#CBD5E1"/>
+                <text x="460" y="135" text-anchor="middle" fill="#334155" font-size="12" font-family="sans-serif">Web</text>
+                
+                <path d="M520 130 L590 130" stroke="#CBD5E1" stroke-width="4" marker-end="url(#arrow)"/>
+                <rect x="590" y="80" width="160" height="100" rx="8" fill="#F0FDF4" stroke="#10B981" stroke-dasharray="5,5"/>
+                <text x="670" y="125" text-anchor="middle" fill="#10B981" font-weight="bold" font-family="sans-serif">TARGET STATE</text>
+                <text x="670" y="145" text-anchor="middle" fill="#059669" font-size="12" font-family="sans-serif">Seamless Omni-CX</text>
+
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#CBD5E1" /></marker>
+                </defs>
+            </svg>
+            <figcaption>Figure 1: Organizational flow from Supply (Nutraline) to Retail (All Nutrition) to the CX Ambition.</figcaption>
+        </figure>
+    </div>
+
+    <div id="critique" class="panel">
+        <h2>Research Critique</h2>
+        <p>The current segmentation strategy relies on an <strong>Exploratory Qualitative Study</strong>. While useful for generating hypotheses, the methodology is fundamentally flawed for operational decision making.</p>
+        
+        <div class="card-grid">
+            <div class="info-card risk">
+                <strong>1. Sample Bias (High Severity)</strong><br>
+                Recruiting participants at gyms and stores selects for "Heavy Users" and "Gym Rats." It completely misses the "Wellness/Novice" segment, which is likely the largest growth opportunity.
+            </div>
+            <div class="info-card risk">
+                <strong>2. Sample Size</strong><br>
+                N=24 total participants across 3 groups is statistically insignificant. You cannot build a business case for 35 stores on the opinions of 24 people.
+            </div>
+            <div class="info-card risk">
+                <strong>3. Moderator Bias</strong><br>
+                Using an internal company psychologist introduces confirmation bias. An external, neutral moderator is required for objective insight.
+            </div>
+        </div>
+
+        <figure>
+            <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(50,50)">
+                    <rect width="180" height="80" rx="8" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>
+                    <text x="90" y="35" text-anchor="middle" font-weight="bold" fill="#B91C1C">RECRUITMENT</text>
+                    <text x="90" y="60" text-anchor="middle" font-size="12" fill="#B91C1C">Bias: "Gym Rats Only"</text>
+                </g>
+                <path d="M240 90 L290 90" stroke="#CBD5E1" stroke-width="3" marker-end="url(#arrow)"/>
+                
+                <g transform="translate(300,50)">
+                    <rect width="180" height="80" rx="8" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>
+                    <text x="90" y="35" text-anchor="middle" font-weight="bold" fill="#B91C1C">MODERATION</text>
+                    <text x="90" y="60" text-anchor="middle" font-size="12" fill="#B91C1C">Bias: Internal Staff</text>
+                </g>
+                <path d="M490 90 L540 90" stroke="#CBD5E1" stroke-width="3" marker-end="url(#arrow)"/>
+
+                <g transform="translate(550,50)">
+                    <rect width="180" height="80" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+                    <text x="90" y="35" text-anchor="middle" font-weight="bold" fill="#1E40AF">OUTPUT</text>
+                    <text x="90" y="60" text-anchor="middle" font-size="12" fill="#1E40AF">6 Unvalidated Segments</text>
+                </g>
+                
+                <text x="400" y="180" text-anchor="middle" fill="#EF4444" font-weight="bold">⚠️ DANGER: Do not scale operations on this data flow.</text>
+            </svg>
+            <figcaption>Figure 2: The "Fruit of the Poisonous Tree" - Biased inputs lead to risky outputs.</figcaption>
+        </figure>
+    </div>
+
+    <div id="insights" class="panel">
+        <h2>Key Insights & Psychology</h2>
+        <p>Despite the sampling bias, the qualitative sessions revealed powerful psychological drivers regarding <strong>Trust</strong> and <strong>Motivation</strong>.</p>
+
+        <div class="card-grid">
+            <div class="info-card insight">
+                <h3>The Trust Paradox</h3>
+                <p>Customers deeply distrust sales staff ("They just want commission"). However, they implicitly trust <strong>Trainers</strong> and <strong>Athletes</strong>.
+                <br><em>Implication:</em> Staff uniforms, titles, and training must mirror "Coaches," not "Clerks."</p>
+            </div>
+            <div class="info-card insight">
+                <h3>The "Natural" Contradiction</h3>
+                <p>Customers state they want "Natural/Healthy" products, but their purchase behavior demands "Fast/Immediate Results" (often synthetic).
+                <br><em>Implication:</em> Marketing must bridge this gap—positioning effective products as "fuel" for health.</p>
+            </div>
+        </div>
+
+        <figure>
+            <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+                <text x="200" y="30" text-anchor="middle" font-weight="bold" fill="#334155">CUSTOMER MOTIVATION</text>
+                <circle cx="150" cy="120" r="70" fill="rgba(56, 189, 248, 0.2)" stroke="#38BDF8"/>
+                <text x="150" y="125" text-anchor="middle" fill="#0369A1" font-weight="bold">LOOK</text>
+                
+                <circle cx="220" cy="120" r="70" fill="rgba(16, 185, 129, 0.2)" stroke="#10B981"/>
+                <text x="220" y="125" text-anchor="middle" fill="#047857" font-weight="bold">PERFORM</text>
+                
+                <circle cx="185" cy="180" r="70" fill="rgba(245, 158, 11, 0.2)" stroke="#F59E0B"/>
+                <text x="185" y="190" text-anchor="middle" fill="#B45309" font-weight="bold">FEEL</text>
+
+                <line x1="400" y1="50" x2="400" y2="250" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="5,5"/>
+
+                <text x="600" y="30" text-anchor="middle" font-weight="bold" fill="#334155">THE TRUST HIERARCHY</text>
+                
+                <rect x="500" y="60" width="200" height="40" rx="4" fill="#10B981"/>
+                <text x="600" y="85" text-anchor="middle" fill="white" font-weight="bold">TRAINERS (High)</text>
+                
+                <rect x="520" y="110" width="160" height="40" rx="4" fill="#64748B"/>
+                <text x="600" y="135" text-anchor="middle" fill="white">PEERS / WEB</text>
+                
+                <rect x="540" y="160" width="120" height="40" rx="4" fill="#EF4444"/>
+                <text x="600" y="185" text-anchor="middle" fill="white" font-weight="bold">SALES STAFF (Low)</text>
+                
+                <text x="600" y="240" text-anchor="middle" font-style="italic" fill="#334155">"I buy what my coach tells me."</text>
+            </svg>
+            <figcaption>Figure 3: The disconnect between what drives them (Look/Feel) and who they listen to (Trainers).</figcaption>
+        </figure>
+    </div>
+
+    <div id="segments" class="panel">
+        <h2>Segmentation Critique</h2>
+        <p>The team proposed 6 segments (e.g., "Newbie Cautious," "Health Compelled"). These are descriptively rich but operationally weak. They violate the <strong>MECE</strong> principle (Mutually Exclusive, Collectively Exhaustive).</p>
+        
+        <h3>The Operational Reality</h3>
+        <p>You cannot staff a store for 6 subtle psychological profiles. You can only operationally support 3 service levels:</p>
+        
+        <figure>
+            <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(50, 50)">
+                    <rect width="200" height="100" rx="8" fill="#F1F5F9" stroke="#334155" stroke-width="2"/>
+                    <text x="100" y="40" text-anchor="middle" font-weight="bold" fill="#0F172A">THE EXPERT</text>
+                    <text x="100" y="65" text-anchor="middle" font-size="12" fill="#64748B">"I know what I want."</text>
+                    <text x="100" y="85" text-anchor="middle" font-size="12" fill="#10B981">Needs: Speed & Price</text>
+                </g>
+                
+                <g transform="translate(275, 50)">
+                    <rect width="200" height="100" rx="8" fill="#F0F9FF" stroke="#38BDF8" stroke-width="2"/>
+                    <text x="100" y="40" text-anchor="middle" font-weight="bold" fill="#0369A1">THE ENTHUSIAST</text>
+                    <text x="100" y="65" text-anchor="middle" font-size="12" fill="#64748B">"I have a goal."</text>
+                    <text x="100" y="85" text-anchor="middle" font-size="12" fill="#0369A1">Needs: Curation</text>
+                </g>
+                
+                <g transform="translate(500, 50)">
+                    <rect width="200" height="100" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+                    <text x="100" y="40" text-anchor="middle" font-weight="bold" fill="#B45309">THE NOVICE</text>
+                    <text x="100" y="65" text-anchor="middle" font-size="12" fill="#64748B">"I am confused."</text>
+                    <text x="100" y="85" text-anchor="middle" font-size="12" fill="#B45309">Needs: Hand-holding</text>
+                </g>
+            </svg>
+            <figcaption>Figure 4: Proposed "Actionable" Segmentation Model based on Service Needs.</figcaption>
+        </figure>
+        
+        <ul class="checklist">
+            <li><strong>Recommendation:</strong> Use the Quantitative Phase to validate if these 3 clusters exist and measure their Willingness-To-Pay.</li>
+            <li><strong>Risk:</strong> If the "Novice" segment isn't willing to pay a premium, the high-touch service model will destroy margins.</li>
+        </ul>
+    </div>
+
+    <div id="action" class="panel">
+        <h2>Roadmap & Recommendations</h2>
+        <p>Stop the immediate rollout. Execute a "Validate, then Scale" approach over the next 6 months.</p>
+
+        <figure>
+            <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+                <line x1="266" y1="30" x2="266" y2="200" stroke="#E2E8F0" stroke-dasharray="4"/>
+                <line x1="532" y1="30" x2="532" y2="200" stroke="#E2E8F0" stroke-dasharray="4"/>
+
+                <text x="133" y="20" text-anchor="middle" font-size="12" fill="#64748B" font-weight="bold">PHASE 1: VALIDATE (Day 1-60)</text>
+                <text x="400" y="20" text-anchor="middle" font-size="12" fill="#64748B" font-weight="bold">PHASE 2: PILOT (Day 61-120)</text>
+                <text x="666" y="20" text-anchor="middle" font-size="12" fill="#64748B" font-weight="bold">PHASE 3: SCALE (Day 121+)</text>
+
+                <rect x="20" y="40" width="220" height="30" rx="4" fill="#0F172A"/>
+                <text x="130" y="60" text-anchor="middle" fill="white" font-size="11">Quant Survey (N=1,000)</text>
+
+                <rect x="20" y="80" width="220" height="30" rx="4" fill="#334155"/>
+                <text x="130" y="100" text-anchor="middle" fill="white" font-size="11">Cluster Analysis</text>
+
+                <rect x="300" y="60" width="200" height="30" rx="4" fill="#38BDF8"/>
+                <text x="400" y="80" text-anchor="middle" fill="#0F172A" font-size="11">2-Store Prototype Pilot</text>
+
+                <rect x="300" y="100" width="200" height="30" rx="4" fill="#0EA5E9"/>
+                <text x="400" y="120" text-anchor="middle" fill="white" font-size="11">Hiring Model: "Trainer" Profiles</text>
+
+                <rect x="560" y="80" width="200" height="30" rx="4" fill="#10B981"/>
+                <text x="660" y="100" text-anchor="middle" fill="white" font-size="11">Network Rollout</text>
+            </svg>
+            <figcaption>Figure 5: Implementation Timeline</figcaption>
+        </figure>
+
+        <div class="card-grid">
+            <div class="info-card">
+                <h3>Key Decision Gates</h3>
+                <ul class="checklist">
+                    <li><strong>Silhouette Score > 0.5:</strong> Do the segments actually exist mathematically?</li>
+                    <li><strong>Pilot Basket Size +15%:</strong> Does the advice-led model actually increase Average Order Value to cover costs?</li>
+                    <li><strong>NPS Gap Closure:</strong> Does the "Novice" segment report higher satisfaction in pilot stores?</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3>Immediate Next Steps</h3>
+                <ul class="checklist">
+                    <li>Draft survey instrument (Category Knowledge vs. Motivation).</li>
+                    <li>Select 2 pilot store locations (High footfall vs. Neighborhood).</li>
+                    <li>Recruit 5 "Coach" profile staff members for pilot.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, panel, tabBtn;
+        
+        // Hide all panels
+        panel = document.getElementsByClassName("panel");
+        for (i = 0; i < panel.length; i++) {
+            panel[i].style.display = "none";
+            panel[i].classList.remove("active");
+        }
+        
+        // Remove active class from buttons
+        tabBtn = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tabBtn.length; i++) {
+            tabBtn[i].className = tabBtn[i].className.replace(" active", "");
+        }
+        
+        // Show current panel and add active class to button
+        document.getElementById(tabName).style.display = "block";
+        // Small timeout to allow display:block to render before adding opacity class for animation
+        setTimeout(() => {
+            document.getElementById(tabName).classList.add("active");
+        }, 10);
+        
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>

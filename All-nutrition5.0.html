@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Nutrition (A): Strategic Case Brief</title>
+    <meta name="description" content="Executive brief on market segmentation strategy for All Nutrition.">
+    <style>
+        /* --- 1. COLUMBIA UNIVERSITY THEME & VARIABLES --- */
+        :root {
+            /* Official/Primary Columbia Colors */
+            --columbia-blue: #004C97; /* A deep, authoritative academic blue */
+            --columbia-accent: #6CACE4; /* Lighter Columbia blue for highlights */
+            --white: #FFFFFF;
+            --cool-gray: #F2F4F7;
+            
+            /* Status Colors */
+            --success: #008F5D;
+            --warning: #D48600;
+            --danger: #B30000;
+            
+            /* Text & Backgrounds */
+            --bg-app: #E6EEF6; /* Very light blue-gray background */
+            --bg-glass: rgba(255, 255, 255, 0.85); /* For glassmorphism effect */
+            --text-dark: #1A2634;
+            --text-muted: #5C6B7A;
+            
+            /* Layout & Effects */
+            --sidebar-width: 280px;
+            --radius: 16px;
+            --shadow-glass: 0 8px 32px 0 rgba(0, 76, 151, 0.15);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.4);
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- 2. GLOBAL RESET & BASE STYLES --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { height: 100%; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-app);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(108, 172, 228, 0.2) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(0, 76, 151, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            line-height: 1.6;
+            height: 100%;
+            display: flex;
+            overflow: hidden; /* App-like container */
+        }
+
+        h1, h2, h3, h4 { color: var(--columbia-blue); font-weight: 700; letter-spacing: -0.02em; }
+        p { margin-bottom: 1rem; color: var(--text-muted); }
+        
+        /* --- 3. IMMERSIVE LAYOUT STRUCTURE --- */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--columbia-blue);
+            color: var(--white);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 1.25rem; font-weight: 800; margin-bottom: 3rem;
+            display: flex; align-items: center; gap: 12px;
+            letter-spacing: 1px; color: var(--columbia-accent);
+        }
+
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item { margin-bottom: 0.75rem; }
+        .nav-btn {
+            width: 100%; padding: 1rem;
+            text-align: left;
+            background: transparent; border: none; color: rgba(255,255,255,0.7);
+            font-weight: 600; font-size: 1rem;
+            border-radius: 12px; cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+        .nav-btn.active {
+            background: var(--white); color: var(--columbia-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-icon { font-size: 1.2rem; }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            margin-bottom: 2.5rem;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header .subtitle { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; }
+
+        /* --- 4. GLASSMORPHISM CARDS & COMPONENTS --- */
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: var(--border-glass);
+            box-shadow: var(--shadow-glass);
+            border-radius: var(--radius);
+            padding: 2rem; margin-bottom: 2rem;
+        }
+        .glass-card.featured { border-left: 5px solid var(--columbia-blue); }
+        .glass-card.risk { border-left: 5px solid var(--danger); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+
+        .callout {
+            padding: 1.5rem; border-radius: 12px;
+            background: rgba(108, 172, 228, 0.1); color: var(--columbia-blue);
+            border: 1px solid var(--columbia-accent); font-weight: 500;
+            display: flex; gap: 1rem; align-items: center;
+        }
+        .callout.risk { background: rgba(179, 0, 0, 0.1); color: var(--danger); border-color: var(--danger); }
+
+        /* Tab Panels */
+        .tab-panel { display: none; animation: fadeIn 0.4s ease-out; }
+        .tab-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 5. ILLUSTRATION STYLES (SVG Theme Integration) --- */
+        figure { margin: 1.5rem 0; }
+        svg { width: 100%; height: auto; max-height: 350px; display: block; }
+        figcaption { text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; font-style: italic; }
+        
+        /* SVG Color Classes */
+        .svg-primary { fill: var(--columbia-blue); }
+        .svg-accent { fill: var(--columbia-accent); }
+        .svg-bg { fill: var(--cool-gray); }
+        .svg-danger { fill: var(--danger); }
+        .svg-stroke { stroke: var(--columbia-blue); stroke-width: 2; fill: none; }
+        .svg-text { fill: var(--text-dark); font-family: var(--font-sans); }
+        .svg-text-light { fill: var(--white); font-family: var(--font-sans); }
+
+        /* --- 6. RESPONSIVE DESIGN --- */
+        @media (max-width: 968px) {
+            .app-container { flex-direction: column; height: auto; overflow: auto; }
+            body { height: auto; overflow: auto; }
+            .sidebar { width: 100%; padding: 1.5rem; flex-direction: row; align-items: center; justify-content: space-between; position: sticky; top: 0; }
+            .brand { margin-bottom: 0; font-size: 1rem; }
+            .nav-menu { display: flex; gap: 1rem; }
+            .nav-btn { padding: 0.75rem; font-size: 0.9rem; justify-content: center; }
+            .nav-text { display: none; } /* Hide text on small tablets */
+            .main-content { padding: 1.5rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.75rem; }
+        }
+        @media (max-width: 600px) {
+            .nav-icon { font-size: 1.5rem; }
+            .brand { display: none; } /* Hide brand on mobile to fit icons */
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <nav class="sidebar">
+        <div class="brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.8l7.6 13.2H4.4L12 5.8zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/></svg>
+            CASE BRIEF: ALL NUTRITION (A)
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <button class="nav-btn active" onclick="switchTab('overview', this)">
+                    <span class="nav-icon">🏛️</span>
+                    <span class="nav-text">Executive Overview</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-btn" onclick="switchTab('critique', this)">
+                    <span class="nav-icon">⚠️</span>
+                    <span class="nav-text">Research Critique</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-btn" onclick="switchTab('insights', this)">
+                    <span class="nav-icon">🧠</span>
+                    <span class="nav-text">Customer Insights</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-btn" onclick="switchTab('segmentation', this)">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-text">Segmentation Strategy</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-btn" onclick="switchTab('roadmap', this)">
+                    <span class="nav-icon">🚀</span>
+                    <span class="nav-text">Action Roadmap</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="header">
+            <div>
+                <h1>Strategic Briefing</h1>
+                <div class="subtitle">Segmentation & Omni-Channel CX Transformation in Chile</div>
+            </div>
+        </header>
+
+        <section id="overview" class="tab-panel active">
+            <div class="glass-card featured">
+                <h2>The Strategic Pivot</h2>
+                <div class="grid-2">
+                    <div>
+                        <h3>Context & Challenge</h3>
+                        <p>All Nutrition (35 stores + online) faces commoditization in the fragmented Chilean market. The goal is to pivot from a "product supply" retailer to a "best-in-class omni-channel customer experience" provider, using expertise to defend margins.</p>
+                        <h3>The Dilemma</h3>
+                        <p>Founders must scale operations based on data, not intuition. However, the current data foundation (3 qualitative focus groups) is insufficient for a fleet-wide restructuring.</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <div class="callout">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--columbia-blue)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <div>
+                                <strong>Recommendation: Pause & Validate</strong><br>
+                                Do not execute the rollout yet. The risk of misaligning staffing and inventory based on unproven segments is too high. Proceed with a 60-day quantitative validation phase.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <figure>
+                    <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ecosystem diagram representing Nutraline and All Nutrition aiming for Omni-CX goal.">
+                        <defs>
+                            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="var(--columbia-blue)" /></marker>
+                        </defs>
+                        <rect x="50" y="75" width="180" height="100" rx="12" class="svg-primary"/>
+                        <text x="140" y="120" text-anchor="middle" font-weight="bold" class="svg-text-light" font-size="16">NUTRALINE</text>
+                        <text x="140" y="145" text-anchor="middle" class="svg-text-light" opacity="0.8" font-size="12">Parent / Importer</text>
+                        
+                        <path d="M230 125 L310 125" class="svg-stroke" stroke-width="3" marker-end="url(#arrow)"/>
+
+                        <rect x="310" y="50" width="220" height="150" rx="12" fill="var(--white)" stroke="var(--columbia-blue)" stroke-width="3"/>
+                        <text x="420" y="85" text-anchor="middle" font-weight="bold" class="svg-text" font-size="16">ALL NUTRITION</text>
+                        <rect x="335" y="105" width="80" height="70" rx="8" class="svg-bg"/>
+                        <text x="375" y="145" text-anchor="middle" class="svg-text" font-size="12">Stores</text>
+                        <rect x="425" y="105" width="80" height="70" rx="8" class="svg-bg"/>
+                        <text x="465" y="145" text-anchor="middle" class="svg-text" font-size="12">Online</text>
+                        
+                        <path d="M530 125 L610 125" class="svg-stroke" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+
+                        <circle cx="680" cy="125" r="70" fill="var(--columbia-accent)" opacity="0.2"/>
+                        <circle cx="680" cy="125" r="60" fill="var(--white)" stroke="var(--columbia-accent)" stroke-width="2"/>
+                        <text x="680" y="120" text-anchor="middle" font-weight="bold" class="svg-text" font-size="14">TARGET STATE</text>
+                        <text x="680" y="145" text-anchor="middle" class="svg-text" font-size="12">Seamless Omni-CX</text>
+                    </svg>
+                    <figcaption>Figure 1: The organizational ecosystem moving toward an integrated experience goal.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="critique" class="tab-panel">
+            <div class="glass-card risk">
+                <h2>The Flawed Research Foundation</h2>
+                <p>The current strategy is built on exploratory qualitative focus groups. Using this to define the entire market creates a high risk of operational failure due to significant biases.</p>
+
+                <div class="grid-3">
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h4 style="color: var(--danger);">1. Selection Bias</h4>
+                        <p style="font-size: 0.9rem;">Recruiting at gyms and stores heavily skews results toward "Heavy Users," completely missing the massive "Novice/Wellness" market opportunity.</p>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h4 style="color: var(--warning);">2. Sample Size (N=24)</h4>
+                        <p style="font-size: 0.9rem;">Three groups are statistically insignificant. The resulting 6 segments are anecdotes, not validated market clusters.</p>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h4 style="color: var(--warning);">3. Moderator Bias</h4>
+                        <p style="font-size: 0.9rem;">Using an internal company psychologist risks confirmation bias rather than neutral probing.</p>
+                    </div>
+                </div>
+
+                <figure>
+                    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration showing biased inputs funneling into distorted outputs.">
+                        <path d="M100 50 L700 50 L600 250 L200 250 Z" fill="rgba(179, 0, 0, 0.05)" stroke="var(--danger)" stroke-width="2" stroke-dasharray="5,5"/>
+                        
+                        <text x="400" y="30" text-anchor="middle" font-weight="bold" class="svg-text">BIASED INPUTS</text>
+                        <g transform="translate(150, 80)">
+                            <circle r="30" class="svg-danger" opacity="0.2"/>
+                            <text x="0" y="5" text-anchor="middle" font-size="10" font-weight="bold" class="svg-text">GYM RECRUIT</text>
+                        </g>
+                        <g transform="translate(400, 80)">
+                            <circle r="30" class="svg-danger" opacity="0.2"/>
+                            <text x="0" y="5" text-anchor="middle" font-size="10" font-weight="bold" class="svg-text">INTERNAL MOD</text>
+                        </g>
+                        <g transform="translate(650, 80)">
+                            <circle r="30" class="svg-danger" opacity="0.2"/>
+                            <text x="0" y="5" text-anchor="middle" font-size="10" font-weight="bold" class="svg-text">TINY SAMPLE</text>
+                        </g>
+
+                        <path d="M400 130 L400 200" class="svg-stroke" stroke="var(--danger)" marker-end="url(#arrowRed)"/>
+
+                        <rect x="250" y="220" width="300" height="60" rx="8" class="svg-danger"/>
+                        <text x="400" y="255" text-anchor="middle" font-weight="bold" class="svg-text-light">DISTORTED MARKET VIEW</text>
+                        <text x="400" y="275" text-anchor="middle" font-size="12" class="svg-text-light">(Over-indexes on experts, misses novices)</text>
+
+                        <defs>
+                            <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="var(--danger)" /></marker>
+                        </defs>
+                    </svg>
+                    <figcaption>Figure 2: The "Bias Funnel" showing how flawed inputs lead to a dangerous operational premise.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="insights" class="tab-panel">
+            <div class="glass-card">
+                <h2>Customer Psychology & Motivations</h2>
+                <p>Despite the sampling bias, the sessions revealed critical psychological drivers that should inform the quantitative phase and CX design.</p>
+                
+                <div class="callout" style="margin-bottom: 2rem;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+                    <div>
+                        <strong>The Core Insight: The Credibility Gap</strong><br>
+                        Customers inherently distrust sales staff ("commission chasers") but implicitly trust Trainers and Athletes. The new CX model fails if staff act like clerks instead of coaches.
+                    </div>
+                </div>
+
+                <figure>
+                    <svg viewBox="0 0 800 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Charts showing trust hierarchy and motivational cognitive dissonance.">
+                        <g transform="translate(50, 20)">
+                            <text x="150" y="20" text-anchor="middle" font-weight="bold" class="svg-text">WHO DO THEY TRUST?</text>
+                            <line x1="0" y1="250" x2="300" y2="250" class="svg-stroke" stroke-width="1"/>
+                            <rect x="30" y="50" width="60" height="200" class="svg-primary" rx="4"/>
+                            <text x="60" y="40" text-anchor="middle" font-weight="bold" class="svg-text">High</text>
+                            <text x="60" y="270" text-anchor="middle" class="svg-text" font-size="12">Trainers</text>
+                            
+                            <rect x="120" y="120" width="60" height="130" class="svg-accent" rx="4"/>
+                            <text x="150" y="270" text-anchor="middle" class="svg-text" font-size="12">Peers/Web</text>
+
+                            <rect x="210" y="200" width="60" height="50" class="svg-danger" rx="4"/>
+                            <text x="240" y="190" text-anchor="middle" font-weight="bold" class="svg-text">Low</text>
+                            <text x="240" y="270" text-anchor="middle" class="svg-text" font-size="12">Sales Staff</text>
+                        </g>
+
+                        <line x1="400" y1="50" x2="400" y2="300" class="svg-stroke" stroke-width="1" stroke-dasharray="4"/>
+
+                        <g transform="translate(450, 20)">
+                            <text x="175" y="20" text-anchor="middle" font-weight="bold" class="svg-text">THE MOTIVATION PARADOX</text>
+                            <circle cx="120" cy="150" r="80" fill="var(--columbia-accent)" opacity="0.5"/>
+                            <text x="90" y="150" text-anchor="middle" font-weight="bold" class="svg-text-light">Want "Natural" & Health</text>
+                            
+                            <circle cx="230" cy="150" r="80" fill="var(--columbia-blue)" opacity="0.5"/>
+                            <text x="260" y="150" text-anchor="middle" font-weight="bold" class="svg-text-light">Want Fast Results</text>
+                            
+                            <text x="175" y="260" text-anchor="middle" font-style="italic" class="svg-text" font-size="14">Cognitive Dissonance = Marketing Opportunity</text>
+                        </g>
+                    </svg>
+                    <figcaption>Figure 3: (Left) The hierarchy of trust sources. (Right) The conflict between desired process and desired outcome.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="segmentation" class="tab-panel">
+            <div class="glass-card">
+                <h2>Critique: From Theoretical to Operational</h2>
+                <p>The proposed 6 segments (e.g., "Newbie Cautious," "Health Compelled") are descriptively rich but operationally unmanageable for store staff. They violate MECE principles (Mutually Exclusive, Collectively Exhaustive).</p>
+                <p>We must collapse these into practical service models based on <strong>Needs</strong> and <strong>Willingness-to-Pay</strong> for advice.</p>
+
+                <figure>
+                    <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram showing 6 complex segments collapsing into 3 operational service models.">
+                        <text x="150" y="30" text-anchor="middle" font-weight="bold" class="svg-text" font-size="14">PROPOSED (Complex)</text>
+                        <text x="650" y="30" text-anchor="middle" font-weight="bold" class="svg-text" font-size="14">OPERATIONAL REALITY (Practical)</text>
+
+                        <g transform="translate(50, 60)">
+                            <rect width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="45" y="25" text-anchor="middle" font-size="10" class="svg-text">High Perf.</text>
+                            <rect y="50" width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="45" y="75" text-anchor="middle" font-size="10" class="svg-text">Adv. Hardcore</text>
+                            <rect y="100" width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="45" y="125" text-anchor="middle" font-size="10" class="svg-text">Adv. Healthy</text>
+                            <rect y="150" width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="45" y="175" text-anchor="middle" font-size="10" class="svg-text">Newbie Cautious</text>
+                            <rect y="200" width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="45" y="225" text-anchor="middle" font-size="10" class="svg-text">Newbie Credulous</text>
+                            <rect x="100" y="200" width="90" height="40" rx="4" class="svg-bg" stroke="#ccc"/><text x="145" y="225" text-anchor="middle" font-size="10" class="svg-text">Health Compelled</text>
+                        </g>
+
+                        <path d="M150 80 C 300 80, 400 100, 550 100" fill="none" stroke="var(--columbia-blue)" stroke-width="2" opacity="0.5"/>
+                        <path d="M150 120 C 300 120, 400 150, 550 150" fill="none" stroke="var(--columbia-accent)" stroke-width="2" opacity="0.5"/>
+                        <path d="M150 200 C 300 200, 400 200, 550 200" fill="none" stroke="var(--success)" stroke-width="2" opacity="0.5"/>
+                        
+                        <g transform="translate(550, 60)">
+                            <rect width="200" height="70" rx="8" fill="#E6EEF6" stroke="var(--columbia-blue)" stroke-width="3"/>
+                            <text x="100" y="30" text-anchor="middle" font-weight="bold" class="svg-text">THE EXPERT</text>
+                            <text x="100" y="50" text-anchor="middle" font-size="12" class="svg-text">Self-serve, Efficiency, Price.</text>
+                            
+                            <rect y="85" width="200" height="70" rx="8" fill="#E6EEF6" stroke="var(--columbia-accent)" stroke-width="3"/>
+                            <text x="100" y="115" text-anchor="middle" font-weight="bold" class="svg-text">THE ENTHUSIAST</text>
+                            <text x="100" y="135" text-anchor="middle" font-size="12" class="svg-text">Guided discovery, Curation.</text>
+
+                             <rect y="170" width="200" height="70" rx="8" fill="#E6EEF6" stroke="var(--success)" stroke-width="3"/>
+                             <text x="100" y="200" text-anchor="middle" font-weight="bold" class="svg-text">THE NOVICE</text>
+                             <text x="100" y="220" text-anchor="middle" font-size="12" class="svg-text">High-touch, Education, Trust.</text>
+                        </g>
+                    </svg>
+                    <figcaption>Figure 4: Collapsing theoretical personas into actionable service models.</figcaption>
+                </figure>
+                
+                <div class="callout risk">
+                    <strong>Critical Assumption Check:</strong> We assume the "Novice" segment is large enough and willing to pay a premium for advice to justify the higher labor costs of the Omni-CX model. If they are price-sensitive, the model fails.
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="tab-panel">
+            <div class="glass-card">
+                <h2>Recommendations & Implementation Roadmap</h2>
+                <p>Shift from immediate rollout to a phased "Validate-Pilot-Scale" approach.</p>
+
+                <figure>
+                    <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gantt chart showing a 3-phase roadmap over 6 months.">
+                        <line x1="266" y1="30" x2="266" y2="220" class="svg-stroke" stroke-width="1" stroke-dasharray="4" opacity="0.3"/>
+                        <line x1="533" y1="30" x2="533" y2="220" class="svg-stroke" stroke-width="1" stroke-dasharray="4" opacity="0.3"/>
+                        
+                        <text x="133" y="20" text-anchor="middle" font-weight="bold" class="svg-text" font-size="12">PHASE 1: VALIDATE (Day 1-60)</text>
+                        <text x="400" y="20" text-anchor="middle" font-weight="bold" class="svg-text" font-size="12">PHASE 2: PILOT (Day 61-120)</text>
+                        <text x="666" y="20" text-anchor="middle" font-weight="bold" class="svg-text" font-size="12">PHASE 3: DECIDE (Day 121+)</text>
+
+                        <rect x="20" y="50" width="220" height="30" rx="15" class="svg-primary"/>
+                        <text x="130" y="70" text-anchor="middle" font-weight="bold" class="svg-text-light" font-size="11">Quant Survey (N=1,000)</text>
+                        
+                        <rect x="180" y="90" width="80" height="30" rx="15" class="svg-accent"/>
+                        <text x="220" y="110" text-anchor="middle" font-weight="bold" class="svg-text-light" font-size="11">Analysis</text>
+
+                        <rect x="280" y="70" width="200" height="30" rx="15" fill="var(--warning)"/>
+                        <text x="380" y="90" text-anchor="middle" font-weight="bold" class="svg-text-light" font-size="11">Define "Coach" Role Profile</text>
+
+                        <rect x="300" y="130" width="200" height="40" rx="20" class="svg-primary"/>
+                        <text x="400" y="155" text-anchor="middle" font-weight="bold" class="svg-text-light" font-size="12">2-Store "Experience" Pilot</text>
+
+                        <g transform="translate(560, 120)">
+                             <polygon points="0,30 150,30 180,60 150,90 0,90" fill="var(--success)"/>
+                             <text x="80" y="65" text-anchor="middle" font-weight="bold" class="svg-text-light">GO / NO-GO GATE</text>
+                        </g>
+                    </svg>
+                    <figcaption>Figure 5: Phased implementation timeline emphasizing validation before scaling.</figcaption>
+                </figure>
+
+                <div class="grid-2">
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h3>Metrics & Decision Gates</h3>
+                        <ul style="padding-left: 1.5rem; margin-top: 1rem;">
+                            <li style="margin-bottom:0.5rem;"><strong>Research Gate:</strong> Silhouette Score > 0.5 (Are the segments statistically real?)</li>
+                            <li style="margin-bottom:0.5rem;"><strong>Commercial Gate:</strong> Pilot store Basket Size +15% (Does advice cover the extra labor cost?)</li>
+                            <li><strong>Experience Gate:</strong> NPS parity between "Novices" and "Experts."</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card" style="padding: 1.5rem;">
+                        <h3>Immediate Next Steps (Week 1)</h3>
+                         <ul style="padding-left: 1.5rem; margin-top: 1rem;">
+                            <li style="margin-bottom:0.5rem;">Draft quantitative survey instrument focusing on Needs vs. Knowledge.</li>
+                            <li style="margin-bottom:0.5rem;">Identify 2 pilot locations (one high-traffic, one neighborhood).</li>
+                            <li>Freeze all current store remodeling plans.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    function switchTab(tabId, btnElement) {
+        // 1. Hide all panels
+        const panels = document.querySelectorAll('.tab-panel');
+        panels.forEach(panel => {
+            panel.classList.remove('active');
+        });
+        
+        // 2. Deactivate all buttons
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // 3. Show target panel and activate target button
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+
+        // 4. On mobile, auto-scroll to content
+        if (window.innerWidth < 968) {
+            document.getElementById(tabId).scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+</html>
